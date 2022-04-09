@@ -4,15 +4,14 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+Graduated from [Department of Computer Science](http://bilgisayar.kocaeli.edu.tr/) of  Kocaeli University at 1998.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+MSc. from [Natural and Applied Sciences Institute](http://fbe.kocaeli.edu.tr) of Kocaeli University at 2008.
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+1998, Anadolu Group, Ankara Brewery.
+1999, Baskent University, IT.
+2000-2012, TUBITAK, Institute of Electronics and Cryptology.
+2012-2022, KTH, PDC Center for High Performance Computing.
+2022, Scania, HPC.
 
-
-[jekyll-organization]: https://github.com/jekyll
+Working with linux, python, hpc. 
