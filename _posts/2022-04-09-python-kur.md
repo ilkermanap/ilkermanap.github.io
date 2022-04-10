@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Python Nasıl Kurulur?"
-categories: misc
+categories: python
 ---
 
 ## Windows
