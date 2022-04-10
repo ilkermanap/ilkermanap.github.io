@@ -11,16 +11,7 @@ Windows işletim sisteminde python kurulumu birkaç farklı şekilde yapılabili
 Microsoft Store uygulamasını çalıştırıp arama kısmına python yazın.
 
 ![microsoft store search python](/assets/images/microsoftstore_search_python.png){:class="img-responsive"}
-
-Karşınıza birden fazla seçenek çıkacaktır. En güncel olanı seçip kurabilirsiniz.
-
-![microsoft store install python](/assets/images/microsoftstore_install_python.png){:class="img-responsive"}
-
-Kurulum sonrasında python komut satırına sol at köşedeki pencere ikonuna tıklayıp Python 3.10 (seçtiğiniz sürüme göre değişebilir) seçerek çalıştırabilirsiniz.
-
-![windows python command line](/assets/images/windows_python_command_line.png){:class="img-responsive"}
-
-### Virtualenv ya da venv
+![windows run cmd](/assets/images/windows_cmd_virtualenv_new_env.png){:class="img-responsive"}
 
 Bir sistemde aynı anda birden fazla python kurulumu olabilir. Farklı projelerinizde değişik python sürümleri ya da sadece belirli sürümdeki paketleri kullanmanız gerekebilir. Örneğin bir uygulama özellikle sadece django 2.1 ile çalışıyordur. Aynı sistemde django 3.1'de kullanmak isterseniz, paketlerin birbirlerinin uzerine yazması ya da yeni sürüm paketin eski sürümü kaldırıp yerine kendisini kurması eski sürüme bağlı uygulamaların bozulmasına sebep olur. Bu durumları engellemek ve çalıştığınız sistem geneline yeni paket kurmadan çalışabilmek için virtualenv gibi araçları kullanmamız gerekir.
 
