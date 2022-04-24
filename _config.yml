@@ -58,3 +58,5 @@ plugins:
  - jekyll-feed
  - jekyll-seo-tag
  - rouge
+ - jekyll-sitemap
+ 
