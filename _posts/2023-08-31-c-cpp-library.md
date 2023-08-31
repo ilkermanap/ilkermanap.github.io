@@ -78,4 +78,88 @@ Gcc icin bazi parametreler asagidadir:
     -g      Uygulamanin hata ayiklayici ile calisabilecek sekilde derler.
     -o adi  Cikti dosyasina ad verebilmeyi saglar.
     -O      Kod optimizasyonu yapar.
-    -l adi  Adi verilen kutuphaneyi linkleme islemi sirasinda kullanmamizi saglar. -lm verilmisse, libm.so kutuphane dosyasi kullanilir.
+    -l adi  Adi verilen kutuphaneyi linkleme islemi sirasinda kullanmamizi 
+            saglar. -lm verilmisse, libm.so kutuphane dosyasi kullanilir.
+
+# Kaynak, Object ve Calistirilabilir Dosyalar
+
+Uygulamanizi birden fazla kaynak dosyasi icerecek sekilde gelistirebilirsiniz. Boylece cok buyuk uygulamalar yazarken kodlari daha kucuk boyutlu dosyalarda saklamaniz mumkun olur. Her bir dosyadaki fonksiyonlar, degisik islemler icin ayri ayri gruplanabilirler. Bir veritabani uygulamasinda veri girisini bir dosyada, arama islemlerini de baska bir dosyada olacak sekilde yazabilirsiniz. Ana fonksiyon olan main, genellikle main.c dosyasinda bulunur. 
+
+Simdi biraz daha uzun bir program yazalim. Kitap kayit uygulamasi, kitapkayit. kitapgiris ve kitapyazdir fonksiyonlarini io.c dosyasinda yazacagiz. Bu fonksiyonlar veritabani giris/cikis islemlerini tanimlayacaktir. 
+main.c dosyasi, kitapyazdir ve kitapgiris fonksiyonlarini cagiracaktir. main.c icinde bu fonksiyon taniminin (function declaration) da  verilmesi gerekir. Fonksiyon tanimi, fonksiyonun kendisine bir referanstir. Fonksiyonun adi, parametreleri ve donus degeri verilerek tanimlanir. 
+
+
+main.c
+
+```
+#include <stdio.h>
+void kitapgiris(char[], float*);
+void kitapyazdir(char[], float);
+
+void main(void)
+{
+    char baslik[20];
+    float fiyat;
+
+    kitapgiris(baslik, &fiyat);
+    kitapyazdir(baslik, fiyat);
+}
+```
+
+io.c
+
+```
+#include <stdio.h>
+
+void kitapgiris(char baslik[], float *fiyat)
+{
+    printf("Kitap adini giriniz : ");
+    scanf("%s%f", baslik, fiyat);
+}
+
+void kitapyazdir(char baslik[], float fiyat)
+{
+    printf("Kitap kaydi :%s %f\n", baslik, fiyat);
+}
+```
+
+Birden fazla kaynak dosyasi oldugunda derleyici ile linker arasindaki farki bilmeniz gerekir. C derleyicisinin gorevi object kodu uretmektir. Linker ise uretilen object kodlari kullanarak calistirilabilir dosya uretir. C derleyicisi her bir dosyayi ayri ayri derleyerek herbiri icin ayri object dosyalari olusturur. Yukaridaki iki dosya icin main.o ve io.o dosyalari olusturulacaktir. Object kod dosyalari olusturulmussa derleyicinin isi bitmis olur. Bu asamada hala calistirilabilir uygulama yoktur. Linker, bu object dosyalarini kullanarak calistirilabilir dosyayi uretir.
+
+Ayni gcc komutunda birden fazla dosyayi derleyip linkleyebiliriz. 
+
+    $ gcc main.c io.c -o kitapkayit
+    $ ./kitapkayit 
+    Kitap adini giriniz : deneme 12.4
+    Kitap kaydi :deneme 12.400000
+
+Yukaridaki sekilde derledigimiz zaman object kod dosyalari silinir. Object kodlari icin
+
+    $ gcc -c main.c io.c 
+    $ ls 
+    io.c  io.o  main.c  main.o
+    
+seklinde derleyebiliriz. Bu asamada, io.c dosyasini derlemeden, sadece main.c derleyip, io.o dosyasini kullanarak da calistirilabilir dosyayi elde edebiliriz:
+
+    $ gcc main.c io.o -o kitapkayit
+    $ ls 
+    io.c  io.o  kitapkayit  main.c  main.o
+
+# Kutuphane Olusturma ve Kullanma: Statik, Shared ve Dinamik
+
+Cogu C programinda nadiren yeniden derlenmesi gereken fonksiyonlar kullanilir. Bazi fonksiyonlari ise diger programlarda kullanmak isteyebiliriz. Cogu durumda bu fonksiyonlar standartlasmis islemleri gerceklestirirler: veritabani giris cikis islemleri ya da ekran manipulasyonu gibi. Bu fonksiyonlari onceden derleyip kutuphane adi verilen ozel dosyalarda saklayabiliriz. Kutuphanelerin icindeki fonksiyonlar yazdigimiz uygulamalarda kullanilirken yeniden derleme gerekmeden hizlica linklenebilirler. 
+
+Degisik turlerdeki uygulamalar sistem dizinlerinde bulunan ozel kutuphaneleri kullanabilirler. Ornegin matematik islemleri libm.so dosyasinda bulunur. Sistem genelinde bulunan kutuphanelerin yani sira, kendi yazdigimiz fonksiyonlari da kutuphane haline getirip baskalarinin uygulama yazarken kullanabilmesini saglayabiliriz. 
+
+Kutuphaneler statik, shared ya da dinamik olabilirler. Statik kutuphanelerdeki object kodlari, linklenen programin icine dahil edilir. Shared kutuphanelerde ise object kod uygulama icine gomulmez. Calisma sirasinda object kod kutuphane icinden erisilerek kullanilir. Shared kutuphane kullanan uygulamalarda kutuphane icindeki fonksiyonlar uygulama icine eklenmez, sadece uygulamanin ihtiyac duyacagi kutuphanelerin adlari not edilir. Calisma sirasinda kutuphane dosyasindan object kodlari okunur ve kullanilir. Dinamik kutuphaneler de shared kutuphaneler gibi calisir. Ancak dinamik kutuphanedeki fonksiyona ihtiyac duyulana kadar object kodlari yuklenmez. Shared ve dinamik kutuphane kullandigimiz zaman uygulama boyutu daha kucuk olur. Uygulama, object kod yerine sadece object kodun bulundugu kutuphane ismini kaydeder. 
+
+## Kutuphane Isimleri
+
+Linux sistemlerde bulunan kutuphaneler cogunlukla /usr/lib ya da /lib dizinlerinde bulunur. Kutuphane isimleri lib on eki ile baslar. Statik kutuphaneler .a, shared/dinamik kutuphaneler ise .so dosya uzantilarina sahiptir. Shared/dinamik kutuphanelerde versiyon numaralari da (major.minor) dosya adinda .so dan sonra bulunur. 
+
+    libgdbm.so.4.11
+    libgdbm.a
+
+Kutuphane adi herhangi bir metin olabilir. Bir kelime, birkac harf ya da tek karakter bile olabilir.
+
+    libm.so.5
+
