@@ -70,6 +70,7 @@ Gcc komutuna verecegimiz parametrelerle derleme islemini herhangi bir adimda dur
     selam.c selam.o selam.s
 
 
+Gcc icin bazi parametreler asagidadir:
 
     -S      Assembly code uretir. Dosya uzantisi .s olur.
     -P      Preprocessor ciktisini uretir. Dosya uzantisi .P olur.
