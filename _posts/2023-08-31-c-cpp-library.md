@@ -1,48 +1,48 @@
 ---
 layout: post
-title: "Derleyiciler ve Kutuphaneler, gcc, g++"
+title: "Derleyiciler ve Kütüphaneler, gcc, g++"
 categories: misc
 ---
 
-Uygulama dedigimiz sey, bir yazilimci tarafindan pekcok programlama dilinden birisi ile gelistirilmis calistirilabilir programdir. Linux sistemlerde yazilimcinin uygulama gelistirme sirasinda kullanabilecegi pek cok arac bulunmaktadir. En cok bilinenlerden birisi olan gcc, yazdiginiz uygulamanin calistirilabilir halini ureten derleyicidir. Linux uzerinde pek cok uygulama c veya c++ ile gelistirilmistir.
+Uygulama dediğimiz şey, bir yazılımcı tarafından pek çok programlama dilinden birisi ile geliştirilmis çalıştırılabilir programdır. Linux sistemlerde yazılımcının uygulama geliştirme sırasında kullanabileceği pek çok araç bulunmaktadır. En çok bilinenlerden birisi olan gcc, yazdığınız uygulamanın çalıştırılabilir halini üreten derleyicidir. Linux üzerinde pek çok uygulama C veya C++ ile geliştirilmiştir.
 
-Uygulama gelistirirken cogunlukla kutuphaneleri kullaniriz. Kendi kutuphanelerinizi olusturabilir ya da hazir kutuphaneleri de uygulamanizda kullanabilirsiniz. Kutuphaneler genellikle ozel bir islem grubu icin fonksiyonlar saglar. Ornegin X-window kutuphaneleri ile grafik arayuzlu uygulamalar gelistirebilirsiniz. Gdbm kutuphanesi size dosya uzerinde veritabani benzeri islemler yapabilen fonksiyonlar saglar. Kutuphaneler kolaylikla paylasilabilir ve dinamik olarak yuklenebilirler.
+Uygulama geliştirirken çoğunlukla kütüphaneleri kullaniriz. Kendi kütüphanelerinizi oluşturabilir ya da hazır kütüphaneleri de uygulamanızda kullanabilirsiniz. Kütüphaneler genellikle özel bir işlem grubu için fonksiyonlar sağlar. Örneğin X-window kütüphaneleri ile grafik arayüzlü uygulamalar geliştirebilirsiniz. Gdbm kütüphanesi size dosya üzerinde veritabanı benzeri işlemler yapabilen fonksiyonlar sağlar. Kütüphaneler kolaylıkla paylaşılabilir ve dinamik olarak yüklenebilirler.
 
 # Bilgi Edinme: info
 
-Linux sistemlerde hemen hemen her uygulama/arac/kutuphane icin man sayfalari bulunur. 
+Linux sistemlerde hemen hemen her uygulama/araç/kütüphane için man sayfaları bulunur.
 
     $ man 3 printf
 
-Yukaridaki komut ile c dilinde ekrana birseyler yazdirmak icin kullanilan printf fonksiyonunun detayli anlatimi goruntulenir. Ayni bilgileri 
+Yukarıdaki komut ile C dilinde ekrana bir şeyler yazdırmak için kullanılan printf fonksiyonunun detaylı anlatımı görüntülenir. Aynı bilgileri
 
-    $ info printf 
+    $ info printf
 
-komutu ile de gorebiliriz. 
+komutu ile de görebiliriz.
 
-info ve man komutlari ile programlama ile ilgili pek cok referansa linux sistem uzerinde kolayca erisebilirsiniz. 
+info ve man komutları ile programlama ile ilgili pek çok referansa linux sistem üzerinde kolayca erişebilirsiniz.
 
 # C Derleyicisi: gcc
 
-C programlama dili ve Unix isletim sistemi arasinda ozel bir iliski vardir. C programlama dili, Unix isletim sisteminin programlanmasi icin ozel olarak gelistirilmistir. Unix isletim sisteminin kodu da c ile yazilmistir. Linux isletim sisteminde de C derleyicisinin gnu versiyonu olan gcc bulunur.  Bu bolumde kisaca c programlama dilinin temel parcalarindan bahsedecek ve basit bir uygulama gelistirecegiz.
+C programlama dili ve Unix işletim sistemi arasında özel bir ilişki vardir. C programlama dili, Unix işletim sisteminin programlanması için özel olarak geliştirilmiştir. Unix işletim sisteminin kodu da c ile yazılmıştır. Linux işletim sisteminde de C derleyicisinin gnu versiyonu olan gcc bulunur.  Bu bölümde kısaca c programlama dilinin temel parçalarından bahsedecek ve basit bir uygulama geliştireceğiz.
 
-Bir C programi degisken tanimlamalari ve islem satirlari iceren fonksiyonlardan olusur. Uygulama calisirken her zaman once main adindaki fonksiyonu cagirir. Ardindan fonksiyon icinde bulunan diger fonksiyon cagrilarini sirasiyla isleterek devam eder. Ornegin printf, cikti uretmek icin siklikla kullanilan bir fonksiyondur.
+Bir C programı değişken tanımlamaları ve işlem satırları içeren fonksiyonlardan oluşur. Uygulama çalışırken her zaman önce main adındaki fonksiyonu çağırır. Ardından fonksiyon içinde bulunan diğer fonksiyon çağrılarını sırasıyla işleterek devam eder. Örneğin printf, çıktı üretmek için sıklıkla kullanılan bir fonksiyondur.
 
-Bir C fonksiyonu, baslik ve govdeden olusur. Baslik kisminda fonksiyonun uretecegi sonucun tipi, fonksiyon adi ve parantez icinde verilen parametre listesi bulunur:
+Bir C fonksiyonu, başlık ve gövdeden oluşur. Başlık kısmında fonksiyonun üreteceği sonucun tipi, fonksiyon adı ve parantez içinde verilen parametre listesi bulunur:
 
     int karebul(int x) { return x*x };
 
-Eger fonksiyon bir deger donmeyecek ise, void kullanilir:
+Eger fonksiyon bir değer dönmeyecek ise, void kullanılır:
 
     void yazdir(int x) { printf("%d", x) };
 
-Fonksiyon govdesi icinde degisken tanimlamalari ve islem satirlari bulunur. Yukaridaki orneklerde {} arasinda verilen kisimlar fonksiyon govdesidir.
+Fonksiyon gövdesi içinde değişken tanımlamaları ve işlem satırları bulunur. Yukarıdaki örneklerde {} arasında verilen kısımlar fonksiyon gövdesidir.
 
-Bir c programi olusturmak icin gereken tek sey bir metin editorudur. Vi, emacs, gedit, pluma  gibi uygulamalar kullanilabilir. 
+Bir C programı oluşturmak için gereken tek şey bir metin editörüdür. Vi, emacs, gedit, pluma  gibi uygulamalar kullanılabilir.
 
-Fonksiyon tanimlamalarinin yani sira, C uygulamalari cogunlukla preprocessor denen satirlar da icerirler. Bir c programi derlenirken, kaynak kod once bir preprocessor araci tarafindan okunur. Bu arac, c derleyicisinin uzerinde calisacagi degistirilmis kaynak kodu olusturur. Butun preprocessor komutlari # isareti ile baslar. Ornegin #include <stdio.h> bize derleme oncesinde stdio.h dosyasinin iceriginin yazdigimiz kodun basina eklenip ondan sonra derleyiciye gonderilecegini belirtir. 
+Fonksiyon tanımlamalarınin yanı sıra, C uygulamaları çoğunlukla preprocessor denen satırlar da içerirler. Bir C programı derlenirken, kaynak kod önce bir preprocessor aracı tarafından okunur. Bu araç, C derleyicisinin üzerinde çalışacağı değiştirilmiş kaynak kodu oluşturur. Bütün preprocessor komutları # işareti ile başlar. Örneğin #include <stdio.h> bize derleme öncesinde stdio.h dosyasının içeriğinin yazdığımız kodun başına eklenip ondan sonra derleyiciye gönderileceğini belirtir.
 
-Stdio.h dosyasi standart girdi/cikti fonksiyonlarini icerir. Birazdan yazacagimiz selam.c uygulamasi derlenirken, printf fonksiyonu icin gereken derlenmis kod parcalarinin uygulamamiza eklenmesini saglar. 
+stdio.h dosyası standart girdi/çıktı fonksiyonlarını içerir. Birazdan yazacağımız selam.c uygulaması derlenirken, printf fonksiyonu için gereken derlenmiş kod parçalarının uygulamamıza eklenmesini sağlar.
 
 ```
 #include <stdio.h>
@@ -53,16 +53,16 @@ void main(void)
 }
 ```
 
-Linux sistemlerde c derleyicisini cagirmak icin gcc komutu kullanilir. Gcc komutu, dort ayri araci daha cagirir. Birincisi preprocessor aracidir. C uygulamalari ozel preprocessor komutlari kullanirlar. Bu komutlar, yazdigimiz kodu belirttigimiz sekilde degistirerek (ornegin stdio.h dosyasini ekleme) derleyiciye gonderir. Ikinci arac derleyicinin kendisidir. Derleyici kodu inceler ve o kod icin makine kodunu (assembly code) uretir. Ucuncu arac, assembler kodunu alip ondan object kodunu uretir. Dorduncu arac ise linker'dir. Uygulamanin object kodunu kullanarak calistirilabilir halini uretir. Farkli isim belirtilmediyse cikti dosyasinin adi a.out olur. Dosya adini belirtmek isterseniz, derleyiciye -o parametresi ile verebilirsiniz. 
+Linux sistemlerde C derleyicisini çağırmak için gcc komutu kullanılır. gcc komutu, dört ayrı aracı daha çağırır. Birincisi preprocessor aracıdır. C uygulamaları özel preprocessor komutları kullanırlar. Bu komutlar, yazdığımız kodu belirttiğimiz şekilde değiştirerek (örneğin stdio.h dosyasını ekleme) derleyiciye gönderir. İkinci araç derleyicinin kendisidir. Derleyici kodu inceler ve o kod için makine kodunu (assembly code) üretir. Üçüncü araç, assembler kodunu alıp ondan object kodunu üretir. Dördüncü araç ise linker'dir. Uygulamanın object kodunu kullanarak çalıştırılabilir halini üretir. Farklı isim belirtilmediyse çıktı dosyasının adı a.out olur. Dosya adını belirtmek isterseniz, derleyiciye -o parametresi ile verebilirsiniz.
 
-Yukaridaki ornegi selam.c adinda bir dosyaya kaydedelim. Simdi derleme islemini nasil yapacagimizi gorecegiz:
+Yukarıdaki örneği selam.c adında bir dosyaya kaydedelim. Şimdi derleme işlemini nasıl yapacağımızı göreceğiz:
 
     $ gcc selam.c -o selam
     $ ./selam
     Merhaba
     $
 
-Gcc komutuna verecegimiz parametrelerle derleme islemini herhangi bir adimda durdurabiliriz. -P preprocessor, -S assembler, -c ise derleyici asamalarinda durmasini saglar. -P parametresi, kaynak kodunda preprocessor calistiktan sonraki durumu selam.P dosyasina kaydeder ve durur. -S, assembly kodu (selam.s) uretildikten sonra durur. -c ile object kod (selam.o) olustuktan sonra durur. 
+gcc komutuna vereceğimiz parametrelerle derleme işlemini herhangi bir adımda durdurabiliriz. -P preprocessor, -S assembler, -c ise derleyici aşamalarında durmasını sağlar. -P parametresi, kaynak kodunda preprocessor çalıştıktan sonraki durumu selam.P dosyasına kaydeder ve durur. -S, assembly kodu (selam.s) üretildikten sonra durur. -c ile object kod (selam.o) oluştuktan sonra durur.
 
     $ gcc -S selam.c
     $ gcc -c selam.c
@@ -70,23 +70,23 @@ Gcc komutuna verecegimiz parametrelerle derleme islemini herhangi bir adimda dur
     selam.c selam.o selam.s
 
 
-Gcc icin bazi parametreler asagidadir:
+gcc için bazı parametreler aşağıdadır:
 
-    -S      Assembly code uretir. Dosya uzantisi .s olur.
-    -P      Preprocessor ciktisini uretir. Dosya uzantisi .P olur.
-    -c      Object kod uretir. Dosya uzantisi .o olur.
-    -g      Uygulamanin hata ayiklayici ile calisabilecek sekilde derler.
-    -o adi  Cikti dosyasina ad verebilmeyi saglar.
+    -S      Assembly code üretir. Dosya uzantısı .s olur.
+    -P      Preprocessor çıktısını üretir. Dosya uzantısı .P olur.
+    -c      Object kod uretir. Dosya uzantısı .o olur.
+    -g      Uygulamayı hata ayıklayıcı ile çalışabilecek şekilde derler.
+    -o adi  Çıktı dosyasına ad verebilmeyi sağlar.
     -O      Kod optimizasyonu yapar.
-    -l adi  Adi verilen kutuphaneyi linkleme islemi sirasinda kullanmamizi 
-            saglar. -lm verilmisse, libm.so kutuphane dosyasi kullanilir.
+    -l adi  Adı verilen kütüphaneyi linkleme işlemi sırasında kullanmamızı
+            sağlar. -lm verilmişse, libm.so kütüphane dosyası kullanılır.
 
-# Kaynak, Object ve Calistirilabilir Dosyalar
+# Kaynak, Object ve çalıştırılabilir Dosyalar
 
-Uygulamanizi birden fazla kaynak dosyasi icerecek sekilde gelistirebilirsiniz. Boylece cok buyuk uygulamalar yazarken kodlari daha kucuk boyutlu dosyalarda saklamaniz mumkun olur. Her bir dosyadaki fonksiyonlar, degisik islemler icin ayri ayri gruplanabilirler. Bir veritabani uygulamasinda veri girisini bir dosyada, arama islemlerini de baska bir dosyada olacak sekilde yazabilirsiniz. Ana fonksiyon olan main, genellikle main.c dosyasinda bulunur. 
+Uygulamanızı birden fazla kaynak dosyası içerecek şekilde geliştirebilirsiniz. Böylece çok büyük uygulamalar yazarken kodları daha küçük boyutlu dosyalarda saklamanız mümkün olur. Her bir dosyadaki fonksiyonlar, değişik işlemler için ayrı ayrı gruplanabilirler. Bir veritabanı uygulamasında veri girişini bir dosyada, arama işlemlerini de başka bir dosyada olacak şekilde yazabilirsiniz. Ana fonksiyon olan main, genellikle main.c dosyasında bulunur.
 
-Simdi biraz daha uzun bir program yazalim. Kitap kayit uygulamasi, kitapkayit. kitapgiris ve kitapyazdir fonksiyonlarini io.c dosyasinda yazacagiz. Bu fonksiyonlar veritabani giris/cikis islemlerini tanimlayacaktir. 
-main.c dosyasi, kitapyazdir ve kitapgiris fonksiyonlarini cagiracaktir. main.c icinde bu fonksiyon taniminin (function declaration) da  verilmesi gerekir. Fonksiyon tanimi, fonksiyonun kendisine bir referanstir. Fonksiyonun adi, parametreleri ve donus degeri verilerek tanimlanir. 
+Şimdi biraz daha uzun bir program yazalım. Kitap kayıt uygulaması. kitapkayit, kitapgiris ve kitapyazdir fonksiyonlarını io.c dosyasında yazacağız. Bu fonksiyonlar veritabanı giriş/çıkış işlemlerini tanımlayacaktır.
+main.c dosyası, kitapyazdir ve kitapgiris fonksiyonlarını çağıracaktır. main.c içinde bu fonksiyon tanımının (function declaration) da  verilmesi gerekir. Fonksiyon tanımı, fonksiyonun kendisine bir referanstır. Fonksiyonun adı, parametreleri ve dönüş değeri verilerek tanımlanır.
 
 
 main.c
@@ -113,53 +113,53 @@ io.c
 
 void kitapgiris(char baslik[], float *fiyat)
 {
-    printf("Kitap adini giriniz : ");
+    printf("Kitap adını giriniz : ");
     scanf("%s%f", baslik, fiyat);
 }
 
 void kitapyazdir(char baslik[], float fiyat)
 {
-    printf("Kitap kaydi :%s %f\n", baslik, fiyat);
+    printf("Kitap kaydı :%s %f\n", baslik, fiyat);
 }
 ```
 
-Birden fazla kaynak dosyasi oldugunda derleyici ile linker arasindaki farki bilmeniz gerekir. C derleyicisinin gorevi object kodu uretmektir. Linker ise uretilen object kodlari kullanarak calistirilabilir dosya uretir. C derleyicisi her bir dosyayi ayri ayri derleyerek herbiri icin ayri object dosyalari olusturur. Yukaridaki iki dosya icin main.o ve io.o dosyalari olusturulacaktir. Object kod dosyalari olusturulmussa derleyicinin isi bitmis olur. Bu asamada hala calistirilabilir uygulama yoktur. Linker, bu object dosyalarini kullanarak calistirilabilir dosyayi uretir.
+Birden fazla kaynak dosyası olduğunda derleyici ile linker arasındaki farkı bilmeniz gerekir. C derleyicisinin görevi object kodu üretmektir. Linker ise üretilen object kodları kullanarak çalıştırılabilir dosya üretir. C derleyicisi her bir dosyayı ayrı ayrı derleyerek her biri için ayrı object dosyaları oluşturur. Yukarıdaki iki dosya için main.o ve io.o dosyaları oluşturulacaktır. Object kod dosyaları oluşturulmuşsa derleyicinin işi bitmiş olur. Bu aşamada hala çalıştırılabilir uygulama yoktur. Linker, bu object dosyalarını kullanarak çalıştırılabilir dosyayı üretir.
 
-Ayni gcc komutunda birden fazla dosyayi derleyip linkleyebiliriz. 
+Aynı gcc komutunda birden fazla dosyayı derleyip linkleyebiliriz.
 
     $ gcc main.c io.c -o kitapkayit
-    $ ./kitapkayit 
-    Kitap adini giriniz : deneme 12.4
-    Kitap kaydi :deneme 12.400000
+    $ ./kitapkayit
+    Kitap adını giriniz : deneme 12.4
+    Kitap kaydı :deneme 12.400000
 
-Yukaridaki sekilde derledigimiz zaman object kod dosyalari silinir. Object kodlari icin
+Yukarıdaki şekilde derlediğimiz zaman object kod dosyaları silinir. Object kodları için
 
-    $ gcc -c main.c io.c 
-    $ ls 
+    $ gcc -c main.c io.c
+    $ ls
     io.c  io.o  main.c  main.o
-    
-seklinde derleyebiliriz. Bu asamada, io.c dosyasini derlemeden, sadece main.c derleyip, io.o dosyasini kullanarak da calistirilabilir dosyayi elde edebiliriz:
+
+şeklinde derleyebiliriz. Bu aşamada, io.c dosyasını derlemeden, sadece main.c derleyip, io.o dosyasını kullanarak da çalıştırılabilir dosyayı elde edebiliriz.
 
     $ gcc main.c io.o -o kitapkayit
-    $ ls 
+    $ ls
     io.c  io.o  kitapkayit  main.c  main.o
 
-# Kutuphane Olusturma ve Kullanma: Statik, Shared ve Dinamik
+# Kütüphane Oluşturma ve Kullanma: Statik, Shared ve Dinamik
 
-Cogu C programinda nadiren yeniden derlenmesi gereken fonksiyonlar kullanilir. Bazi fonksiyonlari ise diger programlarda kullanmak isteyebiliriz. Cogu durumda bu fonksiyonlar standartlasmis islemleri gerceklestirirler: veritabani giris cikis islemleri ya da ekran manipulasyonu gibi. Bu fonksiyonlari onceden derleyip kutuphane adi verilen ozel dosyalarda saklayabiliriz. Kutuphanelerin icindeki fonksiyonlar yazdigimiz uygulamalarda kullanilirken yeniden derleme gerekmeden hizlica linklenebilirler. 
+Çoğu C programında nadiren yeniden derlenmesi gereken fonksiyonlar kullanılır. Bazı fonksiyonları ise diğer programlarda kullanmak isteyebiliriz. Çoğu durumda bu fonksiyonlar standartlaşmış işlemleri gerçekleştirirler: veritabanı giriş çıkış işlemleri ya da ekran manipülasyonu gibi. Bu fonksiyonları önceden derleyip kütüphane adı verilen özel dosyalarda saklayabiliriz. Kütüphanelerin içindeki fonksiyonlar yazdığımız uygulamalarda kullanılırken yeniden derleme gerekmeden hızlıca linklenebilirler.
 
-Degisik turlerdeki uygulamalar sistem dizinlerinde bulunan ozel kutuphaneleri kullanabilirler. Ornegin matematik islemleri libm.so dosyasinda bulunur. Sistem genelinde bulunan kutuphanelerin yani sira, kendi yazdigimiz fonksiyonlari da kutuphane haline getirip baskalarinin uygulama yazarken kullanabilmesini saglayabiliriz. 
+Değişik türlerdeki uygulamalar sistem dizinlerinde bulunan özel kütüphaneleri kullanabilirler. Örneğin matematik işlemleri libm.so dosyasında bulunur. Sistem genelinde bulunan kütüphanelerin yanı sıra, kendi yazdığımız fonksiyonları da kütüphane haline getirip başkalarının uygulama yazarken kullanabilmesini sağlayabiliriz.
 
-Kutuphaneler statik, shared ya da dinamik olabilirler. Statik kutuphanelerdeki object kodlari, linklenen programin icine dahil edilir. Shared kutuphanelerde ise object kod uygulama icine gomulmez. Calisma sirasinda object kod kutuphane icinden erisilerek kullanilir. Shared kutuphane kullanan uygulamalarda kutuphane icindeki fonksiyonlar uygulama icine eklenmez, sadece uygulamanin ihtiyac duyacagi kutuphanelerin adlari not edilir. Calisma sirasinda kutuphane dosyasindan object kodlari okunur ve kullanilir. Dinamik kutuphaneler de shared kutuphaneler gibi calisir. Ancak dinamik kutuphanedeki fonksiyona ihtiyac duyulana kadar object kodlari yuklenmez. Shared ve dinamik kutuphane kullandigimiz zaman uygulama boyutu daha kucuk olur. Uygulama, object kod yerine sadece object kodun bulundugu kutuphane ismini kaydeder. 
+kütüphaneler statik, shared ya da dinamik olabilirler. Statik kütüphanelerdeki object kodları, linklenen programın içine dahil edilir. Shared kütüphanelerde ise object kod uygulama içine gömülmez. Çalışma sırasında object kod kütüphane içinden erişilerek kullanılır. Shared kütüphane kullanan uygulamalarda kütüphane içindeki fonksiyonlar uygulama içine eklenmez, sadece uygulamanın ihtiyaç duyacağı kütüphanelerin adları not edilir. Çalışma sırasında kütüphane dosyasından object kodları okunur ve kullanılır. Dinamik kütüphaneler de shared kütüphaneler gibi çalışır. Ancak dinamik kütüphanedeki fonksiyona ihtiyaç duyulana kadar object kodları yüklenmez. Shared ve dinamik kütüphane kullandığımız zaman uygulama boyutu daha küçük olur. Uygulama, object kod yerine sadece object kodun bulunduğu kütüphane ismini kaydeder.
 
-## Kutuphane Isimleri
+## Kütüphane İsimleri
 
-Linux sistemlerde bulunan kutuphaneler cogunlukla /usr/lib ya da /lib dizinlerinde bulunur. Kutuphane isimleri lib on eki ile baslar. Statik kutuphaneler .a, shared/dinamik kutuphaneler ise .so dosya uzantilarina sahiptir. Shared/dinamik kutuphanelerde versiyon numaralari da (major.minor) dosya adinda .so dan sonra bulunur. 
+Linux sistemlerde bulunan kütüphaneler çoğunlukla /usr/lib ya da /lib dizinlerinde bulunur. Kütüphane isimleri lib ön eki ile başlar. Statik kütüphaneler .a, sahred/dinamik kütüphaneler ise .so dosya uzantılarına sahiptir. Shared/dinamik kütüphanelerde versiyon numaraları da (major.minor) dosya adında .so dan sonra bulunur.
 
     libgdbm.so.4.11
     libgdbm.a
 
-Kutuphane adi herhangi bir metin olabilir. Bir kelime, birkac harf ya da tek karakter bile olabilir.
+Kütüphane adı herhangi bir metin olabilir. Bir kelime, birkaç harf ya da tek karakter bile olabilir.
 
     libm.so.5
 
