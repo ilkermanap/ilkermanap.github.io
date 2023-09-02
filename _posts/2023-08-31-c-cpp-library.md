@@ -154,7 +154,7 @@ kütüphaneler statik, shared ya da dinamik olabilirler. Statik kütüphanelerde
 
 ## Kütüphane İsimleri
 
-Linux sistemlerde bulunan kütüphaneler çoğunlukla /usr/lib ya da /lib dizinlerinde bulunur. Kütüphane isimleri lib ön eki ile başlar. Statik kütüphaneler .a, sahred/dinamik kütüphaneler ise .so dosya uzantılarına sahiptir. Shared/dinamik kütüphanelerde versiyon numaraları da (major.minor) dosya adında .so dan sonra bulunur.
+Linux sistemlerde bulunan kütüphaneler çoğunlukla /usr/lib ya da /lib dizinlerinde bulunur. Kütüphane isimleri lib ön eki ile başlar. Statik kütüphaneler .a, shared/dinamik kütüphaneler ise .so dosya uzantılarına sahiptir. Shared/dinamik kütüphanelerde versiyon numaraları da (major.minor) dosya adında .so dan sonra bulunur.
 
     libgdbm.so.4.11
     libgdbm.a
@@ -163,3 +163,94 @@ Kütüphane adı herhangi bir metin olabilir. Bir kelime, birkaç harf ya da tek
 
     libm.so.5
 
+## Kütüphanelerin Kullanımı
+
+Kütüphaneleri uygulamamıza gcc derleyicisi ile ekleriz. Örneğin libc.so, standart girdi çıktı fonksiyonlarını  içerir. Bu kütüphane derleyici çalıştırılabilir uygulama oluşturacağı zaman otomatik olarak bulunur ve linker tarafından kullanılır. Bu kütüphane içinde bulunan pekçok fonksiyondan birisi de printf'dir. Herhangi bir linux sisteminde pekçok başka kütüphane de bulunur. Örneğin matematik işlemleri için libm.so gibi. Eğer matematik kütüphanesini kullanmak istiyorsak, bunu derleyiciye özellikle belirtmemiz gerekir. libc.so otomatik olarak kullanılırken, bunun dışında kalan kütüphanelerin derleyici tarafından kullanılması için derleme satırına eklenmesi gerekir. 
+
+Çoğu shared kütüphaneler /usr/lib ya da /lib dizinlerinde bulunur. Bazı özel kütüphanelerin kendi özel dizinleri de olabilir. Bu özel dizinler /etc/ld.so.conf dosyasında belirtilir. Derleyici satırına eklenen bir kütüphane, önce bu dizinlerde aranır. Öntanımlı olarak, linux sistemlerde önce shared, sonra statik kütüphane aranır. 
+
+Derleyiciye bir kütüphane kullanmak istediğimizi, -l parametresi ile belirtiriz. -l'den hemen sonra kütüphane adı gelmelidir. libgdbm.so.4.11 icin -lgdbm gibi. 
+
+Şimdi yukarıda yazdığımız kitapkayit uygulamasına matematik kütüphanesini ekleyelim. Bunun için derleme komutu aşağıdaki gibi olmalıdır:
+
+    $ gcc main.c io.c -o kitapkayit -lm
+
+Sistemin kütüphaneleri aradığı dizinlerin dışında bir yerde olan bir kütüphaneyi derleme sırasında kullanmak için -L parametresi kullanılır. Örneğin /usr/local/symcomp dizininde libsymcomp.so.7 adında özel bir kütüphane olsun. Bu kütüphaneyi kullanmak için gereken derleme satırı aşağıdaki gibi olmalıdır:
+
+    $ gcc main.c io.c -o kitapkayit -L/usr/local/symcomp -lsymcomp
+
+## Shared Kütüphaneler
+
+Shared kütüphaneler, pek çok farklı uygulama tarafından kullanılacak şekilde yazılırlar. Kütüphane içinde bulunan kod parçalarının uygulama içinde yeniden yazılması gerekmez. Dosya uzantısı olarak .so kullanılır. .so'dan sonra major.minor versiyon numaraları da çoğunlukla dosya adında kullanılır. Örneğin:
+
+    libgdbm.so.5.11 
+
+Şimdi, kendi kütüphanemizi nasıl oluşturabileceğimizi, kitapkayit uygulaması üzerinden gösterelim. İlk yapılacak işlem, kütüphane içine eklenecek fonksiyonların object kod dosyalarını oluşturmaktır.Bir shared kütüphane için kod derlerken, -fPIC seçeneği kullanılır. PIC, Position Independent Code demektir. 
+
+    $ gcc -fPIC -c io.c
+
+Böylece kitapkayit uygulamasındaki fonksiyonları shared kütüphane içine konabilecek şekilde derlemiş oluruz. -c kullanıldığı için sadece object kod oluşturulur. Kütüphane dosyasını oluşturmak için aşağıdaki komut kullanılır:
+
+    $ gcc -shared -o libmyio.so io.o
+
+Böylece libmyio.so kütüphanesi yaratılmış olur. Şimdi bu kütüphaneyi kullanarak uygulamamızı yeniden derleyelim:
+
+    $ gcc main.c -L. -lmyio -o kitapkayit
+
+Burada -L. ile, libmyio.so dosyasının bulunduğumuz dizinde aranması gerektiğini belirtiyoruz. -lmyio ile, link sırasında kullanılacak kütüphanenin adını veriyoruz. Daha önce io.o dosyasını derleme komutuna eklerken, artık kendi kütüphane dosyamızı kullanarak derleme işlemini yapabiliyoruz.
+
+Şimdi oluşan yeni kitapkayit dosyasını çalıştırmaya çalışalım:
+
+    $ ./kitapkayit
+    ./kitapkayit: error while loading shared libraries: libmyio.so: cannot open shared object file: No such file or directory
+
+Yukarıdaki gibi bir hata alırız. Uygulama çalışırken, libmyio.so dosyasını sistemin bildiği dizinlerde arayacaktır. Bunlar /usr/lib ve /lib gibi standart dizinler ve ek olarak /etc/ld.so.conf dosyasında belirtilmiş olan özel dizinlerdir. Bu durum iki şekilde çözüm üretilebilir. Birincisi libmyio.so dosyasını sistemin bildiği dizinlerden birine, örneğin /usr/lib içine kopyalamak. İkincisi ise, LD_LIBRARY_PATH sistem değişkenini kullanmak.
+
+    $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+
+Yukarıdaki komut ile, sisteme kütüphane ararken bizim belirttiğimiz dizinlere de bakmasını söylemiş oluruz. Kitapkayit uygulamasını yeniden çalıştırdığımızda, yukarıdaki hatanın giderilmiş olduğunu görürüz.
+
+Herhangi bir çalıştırılabilir dosyada hangi shared kütüphanelerin kullanıldığını ldd komutu ile görebiliriz:
+
+    $ ldd kitapkayit
+    	linux-vdso.so.1 (0x00007ffc4ed67000)
+	    libmyio.so => ./libmyio.so (0x00007f1bcbffb000)
+	    libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f1bcbdf7000)
+	    /lib64/ld-linux-x86-64.so.2 (0x00007f1bcc007000)
+
+Yukarıdaki listede libmyio.so dosyası, uygulamanın kendi kütüphanemizle derlendiğini göstermektedir.
+
+## Statik Kütüphaneler
+
+ar komutunu kullanarak Shared kütüphane yerine statik kütüphane yaratabiliriz. Statik kütüphane için dosya uzantısı .a olacaktır. ar komutu ile kütüphane dosyasına ekleme yapma, dosyayı güncelleme, ya da dosya çıkarma işlemleri yapılabilir. Bir kütüphane içine pek çok object kod dosyası eklemek mümkündür.
+
+ar komutunun pek çok parametresi vardır. En çok kullanılan üç komut, r,x ve t'dir. r komutu ile kütüphane içine dosya ekleriz:
+
+    $ ar r myio.a io.o
+    ar: creating myio.a
+
+t komutu ile kütüphane içindeki dosyaları listeleriz.
+
+    $ ar t myio.a 
+    io.o
+
+x komutu ile, kütüphane içindeki bir object kod dosyasını dışarıya kopyalayabiliriz.
+
+    $ ar x myio.a  io.o
+
+Şimdi myio.a kütüphanemizin linker tarafından kullanılabilmesini sağlamak için ranlib komutunu kullanırız:
+
+    $ ranlib myio.a
+
+Artık yeni statik kütüphanemizi kullanarak uygulamamızı derleyebiliriz:
+
+    $ gcc main.c myio.a -o kitapkayit.statik
+
+ldd komutunu kitapkayit.statik dosyası üzerinde çalıştıralım:
+
+    $ ldd kitapkayit.statik
+    	linux-vdso.so.1 (0x00007ffe9ad27000)
+    	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fea545eb000)
+	    /lib64/ld-linux-x86-64.so.2 (0x00007fea547f6000)
+
+Daha önceki çıktı ile karşılaştırırsanız, son çıktı içinde myio.a ya da libmyio.so göremezsiniz. Statik derlemede, uygulama içinde lazım olan kod parçaları myio.a dosyası içinden alınıp kitapkayit.statik dosyası içine eklenmiştir.
